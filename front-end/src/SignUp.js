@@ -20,14 +20,20 @@ const SignUp = (props) =>
             axios.post("http://localhost:3055/api/app2/register",formData)
                 .then((user) => 
                 {
-                    console.log(user.data)
-                    if(user.data.email==formData.email)
+                    console.log('signup',user.data)
+                    if(user.data.email == formData.email)
                     {
                         swal.fire({
                             title:"Registration complete",
                             text:"You are now redirected to the login page"
                         })
                         props.history.push("/")
+                    }
+                    else
+                    {
+                        swal.fire({
+                            title:`${user.data}`
+                        })
                     }
                 })
                 .catch((err) => 

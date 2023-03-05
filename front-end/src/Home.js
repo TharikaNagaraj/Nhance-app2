@@ -34,6 +34,16 @@ const Home = (props) =>
             {
                 console.log('userdata',user.data)
                 setUserData(user.data)
+                const obj = {
+                    name:user.data.name,
+                    email:user.data.email,
+                    degree:user.data.degree,
+                    occupation:user.data.occupation,
+                    maritalStatus:user.data.maritalStatus,
+                    homeTown:user.data.homeTown,
+                    state:user.data.state
+                }
+                setUserInfo(obj)
             })
             .catch((err) => 
             {
@@ -45,7 +55,7 @@ const Home = (props) =>
     {
         if(Object.keys(searchObj).length >0)
         {
-            axios.get(`http://localhost:3055/api/app2/search-email/${searchObj.email}`)
+            axios.get(`http://localhost:3055/api/app2/email-search/${searchObj.email}`)
             .then((user) => 
             {
                 console.log('data from DB-1',user.data)
@@ -70,32 +80,49 @@ const Home = (props) =>
         }       
     },[searchObj])
 
-    useEffect(() => 
+    // useEffect(() => 
+    // {
+    //     axios.get("http://localhost:3055/api/app2/get-user-info",{
+    //         headers:{
+    //             "Authorization":`${localStorage.getItem("token")}`
+    //         }
+    //     })
+    //     .then((ele) => 
+    //     {
+    //         console.log("showInfo",ele.data)
+    //         const obj = {
+    //             name:ele.data.name,
+    //             email:ele.data.email,
+    //             degree:ele.data.degree,
+    //             occupation:ele.data.occupation,
+    //             maritalStatus:ele.data.maritalStatus,
+    //             homeTown:ele.data.homeTown,
+    //             state:ele.data.state
+    //         }
+    //         setUserInfo(obj)
+    //     })
+    //     .catch((err) => 
+    //     {
+    //         console.log(err)
+    //     })
+    // },[showToggle])
+
+    const updateUser = (data) => 
     {
-        axios.get("http://localhost:3055/api/app2/get-user-info",{
-            headers:{
-                "Authorization":`${localStorage.getItem("token")}`
-            }
-        })
-        .then((ele) => 
-        {
-            console.log("showInfo",ele.data)
-            const obj = {
-                name:ele.data.name,
-                email:ele.data.email,
-                degree:ele.data.degree,
-                occupation:ele.data.occupation,
-                maritalStatus:ele.data.maritalStatus,
-                homeTown:ele.data.homeTown,
-                state:ele.data.state
-            }
-            setUserInfo(obj)
-        })
-        .catch((err) => 
-        {
-            console.log(err)
-        })
-    },[showToggle])
+        console.log('added-data',data)
+        const input = {...userData,...data}
+        setUserData(input)
+        const filteredInput = {
+            name:input.name,
+            email:input.email,
+            degree:input.degree,
+            occupation:input.occupation,
+            maritalStatus:input.maritalStatus,
+            homeTown:input.homeTown,
+            state:input.state
+        }
+        setUserInfo(filteredInput)
+    }
 
     const modalToggle = () => 
     {
@@ -175,7 +202,7 @@ const Home = (props) =>
             </Navbar>
             </div>
             <div>
-                <div className='application1'>APPLICATION - 2</div>
+                <div className='application2'>APPLICATION - 2</div>
                 <div className='labelStyle'>Welcome, {userData.name}</div>
                 <div className='addStyle'><button type="button" className={`btn btn-primary`} onClick={handleAddInfo}>Add Info</button></div>
                 <div className='showStyle'><button type='button' className={`btn btn-primary`} onClick={handleShowInfo}>Show Info</button></div>
@@ -186,14 +213,15 @@ const Home = (props) =>
                 <div className='searchErr'>{(Object.keys(searchErr).length >0) && (searchErr.message)}</div>
                 <input type="submit" value='search' className={`searchStyle btn btn-primary`}/>
             </form>
-            {(addInfoToggle)  && (<UserInfo addInfoToggle={addInfoToggle} modalToggle={modalToggle}/>)}
+            {(addInfoToggle)  && (<UserInfo addInfoToggle={addInfoToggle} modalToggle={modalToggle} updateUser={updateUser}/>)}
             {(showToggle) &&
             (<ShowInfo toggleShowInfo={toggleShowInfo} showToggle={showToggle} userInfo={userInfo}/>)}
             {(userSearchToggle) && 
             (<ShowSearch searchUserToggle={searchUserToggle} userSearchToggle={userSearchToggle}
-            searchedUser={searchedUser}/>)}
-            
-        </div>      
+            searchedUser={searchedUser}/>)}            
+        </div>
+        
+       
     )
 }
 export default Home
