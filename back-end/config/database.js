@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 const configureDatabase = () => 
 {
-    mongoose.connect("mongodb://localhost:27017/app1")
+    mongoose.connect("mongodb://localhost:27017/app2")
         .then(() => 
         {
             console.log("connected to DB")
